@@ -32,5 +32,20 @@ public class PasswordAuthProvider extends FirebaseAuthProvider {
         });
     }
 
+    public void register(String email, String password) {
+        getFirebaseRef().createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> result) {
+                System.out.println("Successfully created user account with uid: " + result.get("uid"));
+                getHandler().onSuccess(result);
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                getHandler().onUserError(new FirebaseLoginError(FirebaseResponse.MISC_PROVIDER_ERROR, firebaseError.toString()));
+            }
+        });
+    }
+
     public void logout() {}
 }
